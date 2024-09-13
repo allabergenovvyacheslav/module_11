@@ -41,7 +41,8 @@ def introspection_info(obj):
         'Method': [method for method in dir(obj) if callable(getattr(obj, method))],
         'Module': inspect.getmodule(obj),
         'Module_name': introspection_info.__module__,
-        'Func_name': introspection_info.__name__
+        'Func_name': introspection_info.__name__,
+        'id_object': id(obj)
     }
     return result
 
@@ -51,6 +52,7 @@ class Student:
     def __init__(self, name, school):
         self.name = name
         self.school = school
+        self.info()
 
     def info(self):
         print(f'My name {self.name}, I am a {self.school} student')
