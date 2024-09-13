@@ -1,53 +1,65 @@
-import sys
-from math import factorial
+'''
+Домашнее задание по теме "Интроспекция"
+Цель задания:
+
+Закрепить знания об интроспекции в Python.
+Создать персональную функции для подробной интроспекции объекта.
+
+Задание:
+Необходимо создать функцию, которая принимает объект (любого типа) в качестве аргумента и проводит интроспекцию этого объекта, чтобы определить его тип, атрибуты, методы, модуль, и другие свойства.
+
+1. Создайте функцию introspection_info(obj), которая принимает объект obj.
+2. Используйте встроенные функции и методы интроспекции Python для получения информации о переданном объекте.
+3. Верните словарь или строки с данными об объекте, включающий следующую информацию:
+  - Тип объекта.
+  - Атрибуты объекта.
+  - Методы объекта.
+  - Модуль, к которому объект принадлежит.
+  - Другие интересные свойства объекта, учитывая его тип (по желанию).
+
+
+Пример работы:
+number_info = introspection_info(42)
+print(number_info)
+
+Вывод на консоль:
+{'type': 'int', 'attributes': [...], 'methods': ['__abs__', '__add__', ...], 'module': '__main__'}
+
+Рекомендуется создавать свой класс и объект для лучшего понимания
+'''
+
+import inspect
 from pprint import pprint
 from types import ModuleType
-from typing import Dict, List, Any
-from inspect import getmodule
+from typing import Dict, Union, Any, List
 
-
-# pprint(__builtins__)
-# pprint(dir(__builtins__))
-
-# def func(n):
-#     if n == 1:
-#         return n
-#     else:
-#         return n * factorial(n - 1)
-#
-#
-# sys.setrecursionlimit(3000)
-# sys.set_int_max_str_digits(10000)
-# print(func(2000))
-
-# class Introspection:
-#
-#     def __init__(self, attribute):
-#         self.attribute = attribute
 
 def introspection_info(obj):
-    res: dict[str, list[str] | ModuleType | None | Any] = {'type': type(obj)}
-    for attr in dir(obj):
-        if not callable(attr):
-            res['attributes'] = dir(getattr(obj, attr))
-    for meth in dir(obj):
-        if callable(meth):
-            res['method'] = dir(getattr(obj, meth))
-    res['module'] = getmodule(obj)
-
-    return res
+    result: dict[str, Union[Union[str, list[str], ModuleType, None], Any]] = {
+        'Type': type(obj),
+        'Attribute': [attr for attr in dir(obj) if not callable(getattr(obj, attr))],
+        'Method': [method for method in dir(obj) if callable(getattr(obj, method))],
+        'Module': inspect.getmodule(obj),
+        'Module_name': introspection_info.__module__,
+        'Func_name': introspection_info.__name__
+    }
+    return result
 
 
 class Student:
+
     def __init__(self, name, school):
         self.name = name
         self.school = school
 
     def info(self):
-        print(f'Мое имя {self.name} я обучаюсь в университете {self.school}')
+        print(f'My name {self.name}, I am a {self.school} student')
 
 
 number_info1 = introspection_info(42)
-print(number_info1)
-number_info2 = introspection_info(Student('Вячеслав', 'Urban'))
-print(number_info2)
+pprint(number_info1)
+print()
+print('----------------------------------------------------------------------------')
+print()
+number_info2 = introspection_info(Student('Vyacheslav', 'Urban university'))
+pprint(number_info2)
