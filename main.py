@@ -1,20 +1,25 @@
-from PIL import Image, ImageDraw #
+from PIL import Image
+from PIL import ImageFont, ImageDraw
 
 
-def new_foto_1(name):
-    image = Image.open(name)
-    w, h = image.size
-    return image.resize((w // 1, h // 1))
+class PostMaker:
+    def __init__(self, new_foto):
+        self.image = Image.open(new_foto)
+        self.w, self.h = self.image.size
+        self.image = self.image.resize((self.w // 1, self.h // 1))
+
+    def paste(self, name_foto):
+        paste_image = Image.open(name_foto)
+        paste_image = paste_image.resize((paste_image.size[0] // 3, paste_image.size[1] // 3))
+        self.image.paste(paste_image, (0, 0))
+
+    def upgrade(self, text):
+        draw = ImageDraw.Draw(self.image)
+        font = ImageFont.truetype("ofont.ru_AV Fontimer.ttf", 30)
+        draw.text((5, 220), 'Привет пупсик', font=font, fill='yellow')
+        self.image.show()
 
 
-def new_foto_2(name):
-    image = Image.open(name)
-    w, h = image.size
-    return image.resize((w // 2, h // 2))
-
-
-im = new_foto_1('cat.jpg')
-im2 = new_foto_2('sun.jpg')
-
-im.paste(im2, (200, 200))
-im.show()
+image = (PostMaker('cat.jpg'))
+image.paste('sun.jpg')
+image.upgrade('Привет пупсик')
